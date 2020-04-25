@@ -15,6 +15,7 @@ export class ReactiveComponent implements OnInit {
               private validadores: ValidadoresService) {
     this.crearFormulario();
     this.cargarDataAlFormulario();
+    this.crearListeners();
    }
 
   ngOnInit(): void {
@@ -30,6 +31,10 @@ export class ReactiveComponent implements OnInit {
   }
   get correoNoValido(){
     return this.forma.get('correo').invalid && this.forma.get('correo').touched
+  }
+
+  get usuarioNoValido(){
+    return this.forma.get('usuario').invalid && this.forma.get('usuario').touched
   }
   get distritoNoValido(){
     return this.forma.get('direccion.distrito').invalid && this.forma.get('direccion.distrito').touched
@@ -51,6 +56,7 @@ export class ReactiveComponent implements OnInit {
       nombre  :  ['',[Validators.required,Validators.minLength(5)]],
       apellido:  ['',[Validators.required,this.validadores.noHerrera]],
       correo  :  ['',[Validators.required,Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
+      usuario   :  ['',,this.validadores.existeUsuario],
       pass1   :  ['',Validators.required],
       pass2   :  ['',Validators.required],
       direccion: this.fb.group({
@@ -62,14 +68,25 @@ export class ReactiveComponent implements OnInit {
       validators:this.validadores.passwordsIguales('pass1','pass2')
     })
   }
+  crearListeners(){
+    /*
+    this.forma.valueChanges.subscribe(valor=>{
+      console.log(valor);
+    });
+    this.forma.statusChanges.subscribe(status => console.log({status}));*/
+    this.forma.get('nombre').valueChanges.subscribe(console.log);
+  }
   cargarDataAlFormulario(){
 
     this.forma.reset({
       "nombre": "Juanes",
       "apellido": "Perez",
       "correo": "juan@gmail.com",
+      "pass1":'123',
+      "pass2":'123',
       "direccion": {
-        "distrito": "Ontario"
+        "distrito": "Ontario",
+        "ciudad":"Lima"
       }
     });
     ['Comer','Dormir'].forEach(valor=>this.pasatiempos.push(this.fb.control(valor)));
