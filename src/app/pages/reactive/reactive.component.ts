@@ -63,7 +63,11 @@ export class ReactiveComponent implements OnInit {
         distrito:  ['',Validators.required],
         ciudad  :  ['', Validators.required]
       }),
-      pasatiempos: this.fb.array([])
+      pasatiempos: this.fb.array([
+        this.fb.group({
+        rangoInferior:[''],
+        rangoSuperior:['']
+      })])
     },{
       validators:this.validadores.passwordsIguales('pass1','pass2')
     })
@@ -99,7 +103,7 @@ export class ReactiveComponent implements OnInit {
     this.pasatiempos.removeAt(i);
   }
   guardar(){
-    console.log(this.forma);
+    console.log(this.forma.value);
     if(this.forma.invalid){
       return Object.values(this.forma.controls).forEach(control=>{
         if(control instanceof FormGroup){
